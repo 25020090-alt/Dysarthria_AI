@@ -1,0 +1,24 @@
+# Environments
+ai_env/
+.env
+venv/
+env/
+__pycache__/
+
+# Data and models (should not push heavy files to GitHub)
+data/
+models/
+*.wav
+*.mp3
+*.png
+*.jpg
+*.pt
+*.pth
+*.onnx
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
