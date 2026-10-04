@@ -30,8 +30,8 @@ dataset = load_dataset(
 dataset = dataset.cast_column("audio", Audio(decode=False))
 
 print("2. TẢI NÃO BỘ WHISPER VÀ CẤY LORA...")
-processor = WhisperProcessor.from_pretrained("openai/whisper-tiny", language="en", task="transcribe")
-model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-tiny")
+processor = WhisperProcessor.from_pretrained("openai/whisper-small", language="en", task="transcribe")
+model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-small")
 
 config = LoraConfig(r=32, target_modules=["q_proj", "v_proj"])
 model = get_peft_model(model, config)
@@ -72,7 +72,7 @@ training_args = Seq2SeqTrainingArguments(
     output_dir="./whisper-dysarthria-lora",  # Nơi lưu trữ mô hình
     per_device_train_batch_size=8,           # Học 8 file cùng lúc
     learning_rate=1e-3,                      # Tốc độ học
-    num_train_epochs=3,                      # Học đi học lại 3 vòng
+    num_train_epochs=10,                     # Học đi học lại 10 vòng để AI nhớ lâu hơn
     fp16=True,                               # Bật lõi tính toán siêu tốc của GPU
     logging_steps=5,                         # Cứ 5 bước in ra tiến độ 1 lần
     remove_unused_columns=False,             # Không xóa cột dữ liệu
