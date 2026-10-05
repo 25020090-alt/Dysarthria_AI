@@ -18,7 +18,15 @@ from typing import Any, Dict, List, Union
 print("1. KẾT NỐI STREAMING VỚI BIG DATA...")
 # Bí thuật 1: streaming=True. Data sẽ chảy về từ từ như vòi nước.
 # Thay vì tải từ mạng, ta chỉ thẳng vào thư mục bạn vừa upload trên Kaggle
-dataset = load_dataset("parquet", data_dir="/kaggle/input/Big_data_dysarthria", streaming=True)
+dataset = load_dataset(
+    "parquet", 
+    data_files={
+        "train": "/kaggle/input/datasets/alextranzz/big-data-dysarthria/train*.parquet",
+        "test": "/kaggle/input/datasets/alextranzz/big-data-dysarthria/test*.parquet",
+        "eval": "/kaggle/input/datasets/alextranzz/big-data-dysarthria/eval_holdout*.parquet"
+    }, 
+    streaming=True
+)
 dataset = dataset.cast_column("audio", Audio(sampling_rate=16000))
 
 print("2. TẢI NÃO BỘ WHISPER VÀ CẤY LORA...")
