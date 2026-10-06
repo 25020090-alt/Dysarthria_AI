@@ -20,6 +20,54 @@ for(let i=0; i<40; i++) {
 
 micBtn.addEventListener('click', toggleRecording);
 
+const fileUpload = document.getElementById('audio-upload');
+const uploadBtn = document.getElementById('upload-btn');
+
+uploadBtn.addEventListener('click', () => {
+    fileUpload.click();
+});
+
+fileUpload.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    instructionText.innerText = "UPLOADING...";
+    statusBadge.innerText = "Processing File";
+    statusBadge.style.color = "#8a2be2";
+    transcriptionText.innerHTML = "<span class='placeholder'>Analyzing uploaded file...</span>";
+    waveform.classList.add('active');
+
+    const formData = new FormData();
+    formData.append("audio_file", file);
+
+    try {
+        const response = await fetch("/api/transcribe", {
+            method: "POST",
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            transcriptionText.innerHTML = `<strong>Result:</strong> ${data.text}`;
+            statusBadge.innerText = "Success";
+            statusBadge.style.color = "#00ff88";
+        } else {
+            transcriptionText.innerText = "Lỗi xử lý AI: " + data.error;
+            statusBadge.innerText = "Error";
+            statusBadge.style.color = "#ff416c";
+        }
+    } catch (err) {
+        console.error(err);
+        transcriptionText.innerText = "Không thể kết nối đến máy chủ AI.";
+        statusBadge.innerText = "Offline";
+    }
+    
+    waveform.classList.remove('active');
+    instructionText.innerText = "TAP TO SPEAK";
+    fileUpload.value = ""; // Reset file input
+});
+
 async function toggleRecording() {
     if (!isRecording) {
         startRecording();
